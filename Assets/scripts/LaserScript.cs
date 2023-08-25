@@ -5,6 +5,7 @@ using UnityEngine;
 public class LaserScript : MonoBehaviour
 {
     [SerializeField] float speed;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +27,12 @@ public class LaserScript : MonoBehaviour
     {
         if( this.transform.position.y > 5f)
         {
-            Destroy( this.gameObject );
+            if ( this.transform.parent != null)
+            {
+                Destroy( this.transform.parent.gameObject );
+            }
+
+            Destroy(this.gameObject);
         }
     }
 }
