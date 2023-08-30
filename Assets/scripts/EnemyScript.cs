@@ -32,7 +32,7 @@ public class EnemyScript : MonoBehaviour
        {
             float randomX = Random.Range(-12f, 12f);
             transform.position = new Vector3(randomX, 7f, 0f);
-
+ 
        }
        
     }

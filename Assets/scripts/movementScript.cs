@@ -143,5 +143,9 @@ public class movementScript : MonoBehaviour
         _isShieldActive = true;
         shieldVisualizer.SetActive(true);
     }
+    public void UpdateScore()
+    {
+
+    }
 
 }
