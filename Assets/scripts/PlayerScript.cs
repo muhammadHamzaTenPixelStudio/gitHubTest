@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class movementScript : MonoBehaviour
+public class PlayerScript : MonoBehaviour
 {
+    public GameObject Plane;
     [SerializeField] private GameObject _laser;
     [SerializeField] private GameObject _tripleLaser;
     [SerializeField] private float _fireRate = 0.5f;
@@ -13,14 +16,25 @@ public class movementScript : MonoBehaviour
     [SerializeField] private int _speedOfPlayer = 3;
     private float canFire = -1f;
     private SpawningManager _spawniingManager;
+    private UI_Manager _uiManager;
     public bool _enableTripleFire = false;
     public bool _enableSpeed= false;
     public bool _isShieldActive= false;
     public GameObject shieldVisualizer;
+    public AudioSource _audioSource;
+    public AudioClip _laserSound;
+    public GameObject[] engines;
+    public PlayerInput playerInput;
+    public Button FireButton;
+    private int _score; 
     // Start is called before the first frame update
     void Start()
     {
+        
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.clip = _laserSound;
         _spawniingManager = GameObject.Find("SpawnManager").GetComponent<SpawningManager>();
+        _uiManager = GameObject.Find("UiManager").GetComponent<UI_Manager>();
         if (_spawniingManager ==  null )
         {
             Debug.Log("the spawn manager is null ");
@@ -30,11 +44,14 @@ public class movementScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveMentCode();
-         spawnLaser();
+       // MoveMentCode();
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > canFire)
+        {
+            SpawnLaser();
+        }
     }
 
-    void moveMentCode() {
+    public void MoveMentCode() {
 
         float horizontalInput = Input.GetAxis("Horizontal");
         float VerticalInput = Input.GetAxis("Vertical");
@@ -50,7 +67,7 @@ public class movementScript : MonoBehaviour
 
         // video 26 making restrictions to move the object only in box
 
-        /*f (transform.position.y > 6.18f)
+        /*if (transform.position.y > 6.18f)
          {
              this.transform.position = new Vector3(transform.position.x, 0,0);
          }
@@ -58,12 +75,12 @@ public class movementScript : MonoBehaviour
          {
              this.transform.position = new Vector3(transform.position.x, 0, 0);
          }*/
-        if (transform.position.x > 13)
+        if (transform.position.x > 11)
         {
             this.transform.position = new Vector3(0, transform.position.y, 0);
 
         }
-        else if (transform.position.x < -13)
+        else if (transform.position.x < -11)
         {
 
             this.transform.position = new Vector3(0, transform.position.y, 0);
@@ -78,23 +95,28 @@ public class movementScript : MonoBehaviour
 
     }
 
-    void spawnLaser()
+    public void SpawnLaser()
     {
 
         // video 33
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > canFire && _enableTripleFire)
+        if (Time.time > canFire)
         {
-            
-            canFire= Time.time + _fireRate;
-            Instantiate(_tripleLaser, transform.position , Quaternion.identity);
-            
-        }
-       
-        else if ((Input.GetKeyDown(KeyCode.Space) && Time.time > canFire))
-        {
+
             canFire = Time.time + _fireRate;
-            Instantiate(_laser, transform.position + new Vector3(0, .8f, 0), Quaternion.identity);
-            
+            if (_enableTripleFire)
+            {
+
+                Instantiate(_tripleLaser, transform.position, Quaternion.identity);
+
+            }
+
+            else
+            {
+                //canFire = Time.time + _fireRate;
+                Instantiate(_laser, transform.position + new Vector3(0, .8f, 0), Quaternion.identity);
+
+            }
+            _audioSource.Play();
         }
 
     }
@@ -107,10 +129,22 @@ public class movementScript : MonoBehaviour
             return;
         }
         _life -= 1;
+        if (_life == 2)
+        {
+            engines[0].SetActive(true);
+        }
+        else if (_life==1)
+        {
+            engines[01].SetActive(true);
+            
+        }
+        _uiManager.UpdateLives(_life);
         if (_life < 1)
         {
             _spawniingManager.GameEnd();
-            Destroy(this.gameObject);
+            Destroy(Plane);
+           
+            
         }
     }
     public void EnableTripleShot()
@@ -138,14 +172,17 @@ public class movementScript : MonoBehaviour
         _speedOfPlayer = 3;
         _enableSpeed = false;
     }
-    public void activeShield()
-    {
+    public void ActiveShield()
+    { 
         _isShieldActive = true;
         shieldVisualizer.SetActive(true);
     }
-    public void UpdateScore()
+    public void AddScore(int points)
     {
-
+        _score += points;
+        _uiManager.UpdateScore(_score);
+        
     }
+   
 
 }

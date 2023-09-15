@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SpawningManager : MonoBehaviour
@@ -14,11 +15,14 @@ public class SpawningManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(SpawnEnemies());
-        StartCoroutine(SpawnPowerUps());
+       
        
     }
-
+    public void StartSpawn()
+    {
+        StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnPowerUps());
+    }
     // Update is called once per frame
     void Update()
     {
@@ -27,6 +31,7 @@ public class SpawningManager : MonoBehaviour
 
     IEnumerator SpawnEnemies()
     {
+        yield return new WaitForSeconds(3f);
         while (!stopSpawning)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-12, 12), 6, 0);
@@ -43,6 +48,7 @@ public class SpawningManager : MonoBehaviour
 
     IEnumerator SpawnPowerUps()
     {
+        yield return new WaitForSeconds(3f);
         while (!stopSpawning)
         {
             Vector3 posToSpawn = new Vector3(Random.Range(-10, 10), 7, 0);

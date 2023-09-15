@@ -5,13 +5,14 @@ using UnityEngine;
 public class PowerUps : MonoBehaviour
 {
     [SerializeField] private float speed = 2.3f;
-    movementScript _player;
+    PlayerScript _player;
     [SerializeField] int _powerUpId; 
-
+    public AudioClip _clip;
     // Start is called before the first frame update
     void Start()
     {
-        _player = GameObject.Find("Player").GetComponent<movementScript>();
+        
+        _player = GameObject.Find("Player (1)").transform.GetChild(0).GetComponent<PlayerScript>();
         if (_player == null)
         {
             Debug.Log("player is null");
@@ -43,6 +44,7 @@ public class PowerUps : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            AudioSource.PlayClipAtPoint(_clip, this.transform.position);
             if(_powerUpId==0)
             {
                 _player.EnableTripleShot();
@@ -55,7 +57,7 @@ public class PowerUps : MonoBehaviour
             } 
             else if(_powerUpId==2)
             {
-                _player.activeShield();
+                _player.ActiveShield();
                 Destroy(this.gameObject);
             }
 

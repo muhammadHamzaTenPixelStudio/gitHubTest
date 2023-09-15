@@ -6,12 +6,18 @@ public class EnemyScript : MonoBehaviour
 {
 
     [SerializeField] private  float speed = 2.3f;
-
-    
-    
+    PlayerScript _player;
+    private Animator _animator;
+    private BoxCollider2D _boxCollider;
+    public AudioClip _explosionSound;
+    public AudioSource _audioSource;
     // Start is called before the first frame update
     void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
+        _boxCollider = GetComponent<BoxCollider2D>();
+        _player = GameObject.Find("Player (1)").transform.GetChild(0).GetComponent<PlayerScript>();
+        _animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -40,20 +46,25 @@ public class EnemyScript : MonoBehaviour
     {
         if(other.tag == "Player" )
         {
-            movementScript player = other.transform.GetComponent<movementScript>();
-            if (player != null)
+            _audioSource.Play();
+
+            if (_player != null)
             {
-                player.Damage();
+                _player.Damage();
             }
-            Destroy(this.gameObject);
+            _animator.SetTrigger("OnEnemyDeath");
+            Destroy(this.gameObject,2.8f);
 
         }
-        if(other.tag == "Laser" )
+        if (other.tag == "Laser")
         {
+            _audioSource.Play();
+            _animator.SetTrigger("OnEnemyDeath");
+            speed = 0.5f;
+            _boxCollider.enabled = false;
             Destroy(other.gameObject);
-            Destroy(this.gameObject);
-
-
+            _player.AddScore(10);
+            Destroy(this.gameObject, 2.8f);
         }
     }
 }
