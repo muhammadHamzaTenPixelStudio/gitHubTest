@@ -23,6 +23,7 @@ public class PlayerScript : MonoBehaviour
     public GameObject shieldVisualizer;
     public AudioSource _audioSource;
     public AudioClip _laserSound;
+    public AudioClip _explosionSound;
     public GameObject[] engines;
     public PlayerInput playerInput;
     public Button FireButton;

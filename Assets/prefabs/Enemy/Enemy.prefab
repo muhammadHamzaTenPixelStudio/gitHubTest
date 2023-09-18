@@ -52,6 +52,7 @@ MonoBehaviour:
   speed: 1.6
   _explosionSound: {fileID: 0}
   _audioSource: {fileID: 0}
+  _laser: {fileID: 9014778181188270204, guid: 356eced80f76cb54bb43e02a5645899f, type: 3}
 --- !u!61 &-1947368413286750653
 BoxCollider2D:
   m_ObjectHideFlags: 0

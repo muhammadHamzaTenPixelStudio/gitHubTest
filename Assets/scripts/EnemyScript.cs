@@ -11,6 +11,9 @@ public class EnemyScript : MonoBehaviour
     private BoxCollider2D _boxCollider;
     public AudioClip _explosionSound;
     public AudioSource _audioSource;
+    public GameObject _laser;
+    float _canFire = -1;
+    float _fireRate = 3.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,13 +21,27 @@ public class EnemyScript : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider2D>();
         _player = GameObject.Find("Player (1)").transform.GetChild(0).GetComponent<PlayerScript>();
         _animator = GetComponent<Animator>();
+        //StartCoroutine(EnemyFire());
+       
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         EnemyMovement();
-        spawnAndRespawn();
+        SpawnAndRespawn();
+        if(Time.time > _canFire)
+        {
+            _fireRate = Random.Range(3f, 7f);
+            _canFire = Time.time +_fireRate;
+            Instantiate(_laser, transform.position, Quaternion.identity);
+            LaserScript[] lasers = _laser.GetComponentsInChildren<LaserScript>();
+            lasers[0].AssignEnemyLaser();
+            lasers[01].AssignEnemyLaser();
+            //Debug.Log(" we make forward fire true ");
+        }
         
     }
 
@@ -32,7 +49,7 @@ public class EnemyScript : MonoBehaviour
     {
         this.transform.Translate(Vector3.down * Time.deltaTime * speed);
     }
-    void spawnAndRespawn()
+    void SpawnAndRespawn()
     {
        if(this.transform.position.y < -3.68f )
        {
@@ -40,8 +57,8 @@ public class EnemyScript : MonoBehaviour
             transform.position = new Vector3(randomX, 7f, 0f);
  
        }
-       
     }
+  
     private void OnTriggerEnter2D(Collider2D other)
     {
         if(other.tag == "Player" )
