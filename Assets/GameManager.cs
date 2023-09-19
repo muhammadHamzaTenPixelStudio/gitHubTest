@@ -16,7 +16,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+       
+
         
     }
 
@@ -53,7 +54,7 @@ public class GameManager : MonoBehaviour
     }
     public void ResumeBtn()
     {
-        Time.timeScale = 01f;
+        Time.timeScale = 1f;
         PauseGamePanel.SetActive(false);
         Asteorid.SetActive(true);
         player.SetActive(true);

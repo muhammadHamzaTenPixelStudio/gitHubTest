@@ -142,6 +142,7 @@ public class PlayerScript : MonoBehaviour
         _uiManager.UpdateLives(_life);
         if (_life < 1)
         {
+            _uiManager.CheckForBestScore();
             _spawniingManager.GameEnd();
             Destroy(Plane);
            

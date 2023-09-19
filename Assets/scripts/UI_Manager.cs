@@ -6,16 +6,21 @@ using UnityEngine.UI;
 public class UI_Manager : MonoBehaviour
 {
     [SerializeField] private Text _score;
+    public Text _bestText; 
     [SerializeField] private Text _restartGameText;
     [SerializeField] private Text _gameOver;
     [SerializeField] private Image _livesImg;
     private GameManager _gameManager;
+    int score=0;
+    private int bestScore;
     [SerializeField] private Sprite[] livesSprites;
     // Start is called before the first frame update
     void Start()
     {
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        _score.text = "score : " + 0 ;
+        _score.text = "Score : " + 0 ;
+        bestScore = PlayerPrefs.GetInt("HighScore", 0);
+        _bestText.text = "Best : " + bestScore.ToString();
     }
 
     // Update is called once per frame
@@ -25,11 +30,25 @@ public class UI_Manager : MonoBehaviour
     }
     public void UpdateScore(int playerScore)
     {
-        _score.text = "score :  " + playerScore.ToString();
+        score += 10;
+        _score.text = "Score :  " + playerScore.ToString();
     }
+
+    public void CheckForBestScore()
+    {
+        if (score > bestScore)
+        {
+            bestScore = score;
+            PlayerPrefs.SetInt("HighScore",bestScore );
+            Debug.Log(bestScore);
+            _bestText.text="Best : "+ bestScore.ToString();
+        }
+
+    }
+
     public void UpdateLives(int currentLives)
     {
-        _livesImg.sprite = livesSprites[currentLives];
+        _livesImg.sprite = livesSprites[currentLives]; 
         if (currentLives == 0)
         {
             _gameOver.gameObject.SetActive(true);

@@ -14,6 +14,7 @@ public class EnemyScript : MonoBehaviour
     public GameObject _laser;
     float _canFire = -1;
     float _fireRate = 3.0f;
+    bool canEnemyFire = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,14 +33,14 @@ public class EnemyScript : MonoBehaviour
     {
         EnemyMovement();
         SpawnAndRespawn();
-        if(Time.time > _canFire)
+        if(Time.time > _canFire && canEnemyFire)
         {
             _fireRate = Random.Range(3f, 7f);
             _canFire = Time.time +_fireRate;
             Instantiate(_laser, transform.position, Quaternion.identity);
-            LaserScript[] lasers = _laser.GetComponentsInChildren<LaserScript>();
-            lasers[0].AssignEnemyLaser();
-            lasers[01].AssignEnemyLaser();
+           /* LaserScript[] lasers = _laser.GetComponentsInChildren<LaserScript>();
+            lasers[0].AssignEnemyLaser();*/
+            //lasers[01].AssignEnemyLaser();
             //Debug.Log(" we make forward fire true ");
         }
         
@@ -70,6 +71,7 @@ public class EnemyScript : MonoBehaviour
                 _player.Damage();
             }
             _animator.SetTrigger("OnEnemyDeath");
+            canEnemyFire = false;
             Destroy(this.gameObject,2.8f);
 
         }
@@ -77,10 +79,11 @@ public class EnemyScript : MonoBehaviour
         {
             _audioSource.Play();
             _animator.SetTrigger("OnEnemyDeath");
-            speed = 0.5f;
             _boxCollider.enabled = false;
+            speed = 0f;
             Destroy(other.gameObject);
             _player.AddScore(10);
+            canEnemyFire = false;
             Destroy(this.gameObject, 2.8f);
         }
     }
